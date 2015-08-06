@@ -3,9 +3,10 @@
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 #ifdef WIN32
 
+#include <w32api.h>
 #include <deque>
-
 #include <windows.h>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -13,8 +14,10 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
 #include <time.h>
 #include <io.h>
+
 #include "leveldb/env.h"
 #include "leveldb/slice.h"
 
@@ -22,15 +25,15 @@
 #include "port/port.h"
 #include "util/logging.h"
 
-
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <sstream>
 #include <chrono>
 #include <ctime>
 #include <memory>
 #include <condition_variable>
 #include <thread>
+
 
 namespace leveldb {
 	namespace {
@@ -89,7 +92,7 @@ namespace leveldb {
 		public:
 			WinRandomAccessFile(const std::string& fname, int fd)
 				: filename_(fname), fd_(fd) {}
-			virtual ~WinRandomAccessFile() { close(fd_); }
+			virtual ~WinRandomAccessFile() { _close(fd_); }
 
 			virtual Status Read(uint64_t offset, size_t n, Slice* result,
 				char* scratch) const {
@@ -127,7 +130,6 @@ namespace leveldb {
 			virtual ~WinFile() {
 				Close();
 			}
-
 		private:
 			void Open() {
 				// we truncate the file as implemented in env_posix
@@ -440,7 +442,7 @@ namespace leveldb {
 				int  tz_minuteswest; /* minutes W of Greenwich */
 				int  tz_dsttime;     /* type of dst correction */
 			};
-#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+#if (defined(_MSC_VER) || defined(_MSC_EXTENSIONS))
 #define DELTA_EPOCH_IN_MICROSECS  116444736000000000Ui64 // CORRECT
 #else
 #define DELTA_EPOCH_IN_MICROSECS  116444736000000000ULL // CORRECT

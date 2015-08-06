@@ -35,7 +35,7 @@
 	#define snprintf _snprintf
 #endif
 
-#define close _close
+//#define close _close
 #define fread_unlocked _fread_nolock
 
 #include <string>
